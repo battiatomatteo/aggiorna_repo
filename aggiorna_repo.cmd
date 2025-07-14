@@ -1,24 +1,27 @@
 @echo off
-SETLOCAL ENABLEDELAYEDEXPANSION
+echo ============================
+echo Aggiornamento repository Git
+echo ============================
 
-REM Imposta la directory principale dove si trovano le repo
-set "REPO_DIR=C:\Percorso\Alle\Tue\Repo"
+REM Lista dei percorsi (ognuno racchiuso tra virgolette)
+set REPOS="tutti i percorsi delle tue repo"
 
-cd /d "%REPO_DIR%"
-
-echo Aggiornamento delle repository in %REPO_DIR%
-echo ---------------------------------------------
-
-for /d %%D in (*) do (
-    if exist "%%D\.git" (
-        echo.
-        echo === Entrando in %%D ===
-        cd "%%D"
+REM Ciclo su ogni percorso
+for %%R in (%REPOS%) do (
+    echo.
+    echo 🔍 Verifico la cartella: %%~R
+    if exist "%%~R\.git\" (
+        echo ✅ Repository trovata! Entro nella cartella...
+        pushd "%%~R"
+        echo ▶️  Eseguo: git pull
         git pull
-        cd ..
+        popd
+    ) else (
+        echo ⚠️  ATTENZIONE: "%%~R" NON è una repository Git
     )
 )
 
 echo.
-echo Tutte le repository sono state controllate per aggiornamenti.
-pause
+echo ✅ Controllo completato.
+echo Premi un tasto per chiudere...
+pause >nul
